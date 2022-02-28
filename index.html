@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="main.js"></script>
+    <title>something</title>
+  </head>
+  <body>
+    <div id="container">
+      <div id="game">
+        <header>
+          <h1 class="title"> Maze Visualizer </h1>
+        </header>
+        
+        <div id="menudiv">
+        <select id = "algolist" onchange = "algopick()" >  
+          <option> A* </option>  
+          <option> Dijkstra </option>  
+          <option> Breadth First Search </option>  
+          <option> Depth First Search </option>  
+        </select>  
+
+        <button id="startbutton"  onclick="start()"> Start</button>
+        </div>
+        <div id="board-container">
+          <div id="board"></div>
+        </div>
+
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

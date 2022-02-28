@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+#container {
+  display: flex;
+  background-color: black;
+  height: 100%;
+  align-items: center;
+  flex-direction: column;
+
+}
+
+header {
+  border-bottom: 1px solid rgb(58, 58, 60);
+}
+
+.title {
+  color: gainsboro;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0.4rem 0 0.4rem 0;
+  text-align: center;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+#board-container{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  overflow:hidden;
+}
+#board{
+  display:grid;
+  grid-template-columns: repeat(25, 1fr);
+  grid-gap: 2px;
+  padding:10px;
+  box-sizing: border-box;
+}
+
+.square{
+  border: 1px solid rgb(60,60,60);
+  min-width: 30px;
+  min-height:30px;
+}
+
+
+/* Dropdown Button */
+#menudiv{
+  display:flex;
+  justify-content: space-between;
+
+}
+#algolist {
+  background-color: cyan;
+  color: rgb(0, 0, 0);
+  font-family: 'Courier New', Courier, monospace;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+}
+
+
+
+#startbutton{
+  background-color: cyan;
+  font-size: 20px;
+  min-width: 100px;
+  background-image: 'url(start.jpg)';
+  font-family: 'Courier New', Courier, monospace;
+
+}
+
+@keyframes gray_to_black {
+  from {background-color: gray;}
+  to {background-color: black;}
+}
+
+@keyframes black_to_cyan{
+  from{background-color: black;}
+  to {background-color: cyan;}
+}
+
+@keyframes endNode{
+  from{background-color: black;}
+  to {background-color: cyan;}
+}
