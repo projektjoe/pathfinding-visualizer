@@ -83,10 +83,10 @@ class Board{
       
         for (let i=0; i<this.numOfSquaresRow; i++){
           for(let j =0; j < this.NumOfSquaresColumn; j++){
-            if(this.numericalBoard[i][j]==2){
+            if(this.numericalBoard[i][j]===2){
               startfound=true;
             }
-            if(this.numericalBoard[i][j]==3){
+            if(this.numericalBoard[i][j]===3){
               endfound=true;
             }
           }
@@ -130,10 +130,7 @@ class Board{
         let Board = this.numericalBoard
         let startInHands = this.startInHands
         let endInHands = this.endInHands
-        let resetStartNodePosition = this.#resetStartNodePosition()
-        let resetEndNodePosition = this.#resetEndNodePosition()
         square.onmouseover= function(){
-            debugger;
             let r = this.attributes.row.nodeValue
             let c = this.attributes.column.nodeValue
             this.style.backgroundColor = "white";
@@ -183,7 +180,6 @@ class Board{
               }
               else if (thisSquare === WALL){
                 this.style.backgroundColor = "cyan";
-                this.style.animationName = "black_to_cyan"
               }
               else if (thisSquare === START){
                 this.style.backgroundImage = START_ICON;
@@ -248,7 +244,7 @@ console.log(algo)
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
-    board = new Board(27,54)
+    board = new Board(25,20)
     board.initialize()
 
 })
