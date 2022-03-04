@@ -67,7 +67,8 @@ header {
   justify-content: space-between;
 
 }
-#algolist {
+
+.dropdown {
   background-color: cyan;
   color: rgb(0, 0, 0);
   font-family: 'Courier New', Courier, monospace;
@@ -92,10 +93,21 @@ header {
   to {background-color: black;}
 }
 
+@keyframes black_to_gray{
+  from{background-color: black;}
+  to {background-color: gray;}
+}
+
 @keyframes black_to_cyan{
   from{background-color: black;}
   to {background-color: cyan;}
 }
+
+@keyframes gray_to_orange{
+  from{background-color: gray;}
+  to {background-color: orange;}
+}
+
 
 @keyframes endNode{
   from{background-color: black;}
