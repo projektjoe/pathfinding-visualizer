@@ -105,7 +105,7 @@ header {
 
 @keyframes gray_to_orange{
   from{background-color: gray;}
-  to {background-color: orange;}
+  to {background-color: yellow;}
 }
 
 

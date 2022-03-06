@@ -13,8 +13,8 @@ class BFS{
         this.board = board
         this.numOfSquaresRow = this.board.length
         this.numOfSquaresColumn = this.board[0].length
-        this.visitedNodes = []
-        this.visitedNodesPrevious = [null]
+        this.visitQueue = []
+        this.visitQueuePrevious = [null]
         this.startPos = [0,0]
         this.endPos = [0,0]
         this.directions = ['up','right','down','left']
@@ -24,7 +24,6 @@ class BFS{
             'down':[1,0],
             'left':[0,-1]
         }
-        this.speed = speed
         this.speed = speeds[speed]
     }
     #getStartEndPositions(){
@@ -39,30 +38,7 @@ class BFS{
             }
         }
     }
-    #sumArray(a, b) {
-        var c = [];
-        for (var i = 0; i < Math.max(a.length, b.length); i++) {
-          c.push((a[i] || 0) + (b[i] || 0));
-        }
-        return c;
-    }
-    #arraysEqual(a, b) {
-        if (a === b) return true;
-        if (a == null || b == null) return false;
-        if (a.length !== b.length) return false;
-        for (var i = 0; i < a.length; ++i) {
-          if (a[i] !== b[i]) return false;
-        }
-        return true;
-      }
-    #elementIsInArray(Element,Array){
-        for (let i =0; i<Array.length; i++){
-            if(this.#arraysEqual(Array[i],Element)){
-                return i;
-            }
-        }
-        return -1;
-    }
+
     #checkNodeValidity(Node){
         //example: Node = [0,1]
         // if x < 0 or > length then node is outside the board and invalid
@@ -72,7 +48,7 @@ class BFS{
         if(Node[1] < 0 || Node[1] >= this.numOfSquaresColumn){
             return 0
         }
-        if(this.#elementIsInArray(Node, this.visitedNodes)!==-1){
+        if(elementIsInArray(Node, this.visitQueue)!==-1){
             return 0 //already visited
         }
         if(this.board[Node[0]][Node[1]] === WALL){
@@ -82,21 +58,20 @@ class BFS{
             return END // found!!
         }
         return 1; //valid node
-
     }
-    visitNodes = async function(){
+    breadthFirstSearch = async function(){
     let i = 0
-        while (i<this.visitedNodes.length){
-            let currentNode = this.visitedNodes[i]
+        while (i<this.visitQueue.length){
+            let currentNode = this.visitQueue[i]
             await sleep(this.speed);
             colorSquare(currentNode, "VISITED");
             this.board[currentNode[0]][currentNode[1]] = VISITED
             for(let direction of this.directions){
-                let neighborNodeCoordinates = this.#sumArray(this.directionCoordinate[direction], currentNode)
+                let neighborNodeCoordinates = sumArray(this.directionCoordinate[direction], currentNode)
                 let nodeValidity = this.#checkNodeValidity(neighborNodeCoordinates)
                 if(nodeValidity){
-                    this.visitedNodes.push(neighborNodeCoordinates) 
-                    this.visitedNodesPrevious.push(currentNode)
+                    this.visitQueue.push(neighborNodeCoordinates) 
+                    this.visitQueuePrevious.push(currentNode)
                     if(nodeValidity===END){
                         return 1;
                     }
@@ -107,11 +82,11 @@ class BFS{
     return 0; // no goal node was found or reached
     }
     backtrack = async function(){
-        let index = this.visitedNodes.length-1
-        while(!this.#arraysEqual(this.visitedNodes[index],this.startPos)){
-            index = this.#elementIsInArray(this.visitedNodesPrevious[index],this.visitedNodes)
-            colorSquare(this.visitedNodes[index], "PATH")
-            this.board[this.visitedNodes[index][0]][this.visitedNodes[index][1]] = PATH
+        let index = this.visitQueue.length-1
+        while(!arraysEqual(this.visitQueue[index],this.startPos)){
+            index = elementIsInArray(this.visitQueuePrevious[index],this.visitQueue)
+            colorSquare(this.visitQueue[index], "PATH")
+            this.board[this.visitQueue[index][0]][this.visitQueue[index][1]] = PATH
             await sleep(this.speed+10);
         }
 
@@ -119,8 +94,8 @@ class BFS{
 
     search = async function(){
         this.#getStartEndPositions()
-        this.visitedNodes.push(this.startPos)
-        if(await this.visitNodes()){
+        this.visitQueue.push(this.startPos)
+        if(await this.breadthFirstSearch()){
             this.backtrack()    
         }
     }

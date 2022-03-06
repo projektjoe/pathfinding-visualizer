@@ -4,8 +4,11 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="js/utility_functions.js"></script>
     <script src="js/animations.js"></script>
+    <script src="js/a_star.js"></script>
     <script src="js/breadth_first_search.js"></script>
+    <script src="js/depth_first_search.js"></script>
     <script src="js/main.js"></script>
 
     <title>Maze</title>
@@ -19,10 +22,10 @@
         
         <div id="menudiv">
         <select id ="algolist" class = "dropdown" onchange = "algopick()" >  
-          <option> Breadth First Search  </option>  
-          <option> Dijkstra </option>  
           <option> A* </option>  
+          <option> Breadth First Search </option>  
           <option> Depth First Search </option>  
+          <option> Dijkstra </option>   
         </select> 
 
         <select id="speedlist" class = "dropdown" onchange = "speedpick()" >  

@@ -35,7 +35,7 @@ colorSquare = async function(Node,type){// Node = [x,y]
       square.style.animationName = "black_to_gray";
       break;
     case "PATH":
-      square.style.backgroundColor = "orange";
+      square.style.backgroundColor = "yellow";
       square.style.animationName = "gray_to_orange";
       break;
   }

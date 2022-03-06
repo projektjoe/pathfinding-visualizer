@@ -6,7 +6,7 @@ class Board{
     constructor(row,column){
         this.numOfSquaresRow = row
         this.NumOfSquaresColumn = column
-        this.algorithm = "Breadth First Search"
+        this.algorithm = "A*"
         this.numericalBoard = Array(this.numOfSquaresRow).fill().map(()=>Array(this.NumOfSquaresColumn).fill(0));
         this.mouseClicked = [false]
         this.startInHands = [false]
@@ -244,20 +244,26 @@ function speedpick() {
     board.speed = mylist.options[mylist.selectedIndex].text;  
 } 
   
-function start(){ 
+async function start(){ 
+  document.getElementById("startbutton").disabled = true;
   switch(board.algorithm){
     case "A*":
+      astar = new aStar(board.numericalBoard, board.speed)
+      await astar.search()
       break;
     case "Dijsktra":
       break;
     case "Breadth First Search":
       bfs = new BFS(board.numericalBoard, board.speed)
-      bfs.search()
+      await bfs.search()
       break;
 
     case "Depth First Search":
+      dfs = new DFS(board.numericalBoard, board.speed)
+      await dfs.search()
       break;
   }
+  document.getElementById("startbutton").disabled = false;
 }
 
 
