@@ -104,7 +104,7 @@ class aStar{
 
             let currentNode = this.priorityQueue.data[0].Coordinates
             colorSquare(currentNode, "VISITED")
-            if (!this.board[currentNode[0]][currentNode[1]]===START){this.board[currentNode[0]][currentNode[1]] = VISITED;}
+            if (!(this.board[currentNode[0]][currentNode[1]]===START)){this.board[currentNode[0]][currentNode[1]] = VISITED;}
             let validNeighbors = this.#getValidNeighbors(currentNode)
             for(let currentNodeNeighbor of validNeighbors){
                 let distFromStart = 1+this.priorityQueue.data[0].distanceFromStartingPoint

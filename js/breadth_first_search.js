@@ -4,7 +4,7 @@ const START = 2
 const END = 3
 const VISITED = 4
 const PATH = 5
-const speeds = {"Fast":1,
+const speeds = {"Fast":10,
                 "Medium":250,
                 "Slow":500
                 }
@@ -65,7 +65,7 @@ class BFS{
             let currentNode = this.visitQueue[i]
             await sleep(this.speed);
             colorSquare(currentNode, "VISITED");
-            if (!this.board[currentNode[0]][currentNode[1]]===START){this.board[currentNode[0]][currentNode[1]] = VISITED;}
+            if (!(this.board[currentNode[0]][currentNode[1]]===START)){this.board[currentNode[0]][currentNode[1]] = VISITED;}
             for(let direction of this.directions){
                 let neighborNodeCoordinates = sumArray(this.directionCoordinate[direction], currentNode)
                 let nodeValidity = this.#checkNodeValidity(neighborNodeCoordinates)
@@ -87,7 +87,7 @@ class BFS{
             index = elementIsInArray(this.visitQueuePrevious[index],this.visitQueue)
             colorSquare(this.visitQueue[index], "PATH")
             this.board[this.visitQueue[index][0]][this.visitQueue[index][1]] = PATH
-            await sleep(this.speed+10);
+            await sleep(this.speed);
         }
 
     }

@@ -64,8 +64,8 @@ class DFS{
             return path
         }
         colorSquare(currentNode, "VISITED");
-        await sleep(this.speed+10)
-        if (!this.board[currentNode[0]][currentNode[1]]===START){this.board[currentNode[0]][currentNode[1]] = VISITED;}
+        await sleep(this.speed)
+        if (!(this.board[currentNode[0]][currentNode[1]]===START)){this.board[currentNode[0]][currentNode[1]] = VISITED;}
 
         let validNodes = this.#getValidNeighbors(currentNode)
         for(let Node of validNodes){

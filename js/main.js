@@ -12,7 +12,7 @@ class Board{
         this.startInHands = [false]
         this.endInHands = [false]
         this.speed = "Fast"
-        this.notReadyForSearch = [false];
+        this.searchDone = [false]
         
     }
     
@@ -132,6 +132,7 @@ class Board{
         let Board = this.numericalBoard
         let startInHands = this.startInHands
         let endInHands = this.endInHands
+        let searchDone = board.searchDone
         square.onmouseover= function(){
 
             let r = this.attributes.row.nodeValue
@@ -238,12 +239,14 @@ class Board{
             }
         }
     }
+    
+    
 
 }
-function clearPath(){
+function clearPathAndVisited(){
   for(let i =0; i<board.numericalBoard.length; i++){
     for(let j =0; j<board.numericalBoard[0].length; j++){
-      if(board.numericalBoard[i][j] === PATH){
+      if(board.numericalBoard[i][j] === PATH ||board.numericalBoard[i][j] === VISITED ){
       board.numericalBoard[i][j] = NOTHING;
       colorSquare([i,j], "NOTHING")
       }
@@ -259,12 +262,13 @@ function speedpick() {
     var mylist = document.getElementById("speedlist");  
     board.speed = mylist.options[mylist.selectedIndex].text;  
 } 
+
   
 async function start(){ 
-  if (  this.notReadyForSearch)return;
-  clearPath()
-  this.notReadyForSearch = true;
+  clearPathAndVisited()
   document.getElementById("startbutton").disabled = true;
+  document.getElementById("clearbutton").disabled = true;
+
   switch(board.algorithm){
     case "A*":
       astar = new aStar(board.numericalBoard, board.speed, "A*")
@@ -284,8 +288,10 @@ async function start(){
       await dfs.search()
       break;
   }
-  this.notReadyForSearch = false;
   document.getElementById("startbutton").disabled = false;
+  document.getElementById("clearbutton").disabled = false;
+
+  board.searchDone[0] = true;
 }
 function clearBoard(){
   for(let i =0; i<board.numericalBoard.length; i++){
@@ -295,6 +301,8 @@ function clearBoard(){
       colorSquare([i,j], "NOTHING")
     }
   }
+  board.searchDone[0] = false;
+
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
