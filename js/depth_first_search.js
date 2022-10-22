@@ -79,6 +79,8 @@ class DFS{
     }
     animatePath = async function(path){
         path.shift()
+        path.shift()
+        path.pop()
         for(let Node of path){
             await sleep(this.speed)
             colorSquare(Node, "PATH")
@@ -89,8 +91,8 @@ class DFS{
     search = async function(){
         this.#getStartEndPositions()
         let path = await this.depthFirstSearch(this.startPos)
-        debugger;
-        this.animatePath(path)
+        
+        await this.animatePath(path)
     }
 }
     

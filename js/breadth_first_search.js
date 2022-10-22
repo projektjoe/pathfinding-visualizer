@@ -86,7 +86,7 @@ class BFS{
         while(!arraysEqual(this.visitQueue[index],this.startPos)){
             index = elementIsInArray(this.visitQueuePrevious[index],this.visitQueue)
             colorSquare(this.visitQueue[index], "PATH")
-            this.board[this.visitQueue[index][0]][this.visitQueue[index][1]] = PATH
+            if (!(this.board[this.visitQueue[index][0]][this.visitQueue[index][1]]===START))this.board[this.visitQueue[index][0]][this.visitQueue[index][1]] = PATH
             await sleep(this.speed);
         }
 
