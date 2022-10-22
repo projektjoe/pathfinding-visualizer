@@ -65,7 +65,7 @@ class BFS{
             let currentNode = this.visitQueue[i]
             await sleep(this.speed);
             colorSquare(currentNode, "VISITED");
-            this.board[currentNode[0]][currentNode[1]] = VISITED
+            if (!this.board[currentNode[0]][currentNode[1]]===START){this.board[currentNode[0]][currentNode[1]] = VISITED;}
             for(let direction of this.directions){
                 let neighborNodeCoordinates = sumArray(this.directionCoordinate[direction], currentNode)
                 let nodeValidity = this.#checkNodeValidity(neighborNodeCoordinates)

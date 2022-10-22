@@ -23,8 +23,9 @@ class priorityQueue{
 }
 
 class aStar{
-    constructor(board, speed){
+    constructor(board, speed, algo){
         this.board = board
+        this.algo = algo
         this.numOfSquaresRow = this.board.length
         this.numOfSquaresColumn = this.board[0].length
         this.priorityQueue = new priorityQueue()
@@ -53,6 +54,9 @@ class aStar{
     }
     #calculateHeuristic(Node1,Node2){
         return Math.sqrt((Node1[1] - Node2[1])**2 +(Node1[0] - Node2[0])**2)
+    }
+    #calculateDistFromStart(Node){
+        return Math.sqrt((Node[1] - this.startPos[1])**2 +(Node[0] - this.startPos[0])**2)
     }
     #checkNodeValidity(Node){
         //example: Node = [0,1]
@@ -96,14 +100,16 @@ class aStar{
     aStarSearch = async function(){
         this.priorityQueue.append(new Node(this.startPos,0,0+this.#calculateHeuristic(this.startPos,this.endPos), null))
         while(!arraysEqual(this.priorityQueue.data[0].Coordinates,this.endPos)){ // while we dont reach the end node
+            await sleep(this.speed);
+
             let currentNode = this.priorityQueue.data[0].Coordinates
             colorSquare(currentNode, "VISITED")
-            this.board[currentNode[0]][currentNode[1]] = VISITED;
+            if (!this.board[currentNode[0]][currentNode[1]]===START){this.board[currentNode[0]][currentNode[1]] = VISITED;}
             let validNeighbors = this.#getValidNeighbors(currentNode)
             for(let currentNodeNeighbor of validNeighbors){
-                debugger;
                 let distFromStart = 1+this.priorityQueue.data[0].distanceFromStartingPoint
                 let cost = this.#calculateHeuristic(currentNodeNeighbor,this.endPos) // +  distFromStart
+                if (this.algo == "Dijkstra"){ cost += distFromStart}// this.#calculateDistFromStart(currentNodeNeighbor)}
                 if(!this.#nodeInQueue(currentNodeNeighbor)){
                 this.priorityQueue.append(new Node(currentNodeNeighbor,
                                                    distFromStart,
@@ -115,10 +121,20 @@ class aStar{
             this.priorityQueue.data.sort((a, b) => (a.Cost - b.Cost))
         }
     }
-    
+    backtrack = async function(){
+        let currentNode = this.priorityQueue.visited[this.priorityQueue.visited.length - 1]
+        while (!arraysEqual(currentNode.Coordinates,this.startPos)){
+            await sleep(this.speed);
+            colorSquare(currentNode.Coordinates,"PATH")
+            this.board[currentNode.Coordinates[0]][currentNode.Coordinates[1]] = PATH
+            currentNode = currentNode.Previous
+            
+        }
+    }
     search = async function(){
         this.#getStartEndPositions()
-        this.aStarSearch()
+        await this.aStarSearch()
+        await this.backtrack()
     }
 
 }

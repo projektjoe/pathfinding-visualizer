@@ -65,7 +65,8 @@ class DFS{
         }
         colorSquare(currentNode, "VISITED");
         await sleep(this.speed+10)
-        this.board[currentNode[0]][currentNode[1]] = VISITED;
+        if (!this.board[currentNode[0]][currentNode[1]]===START){this.board[currentNode[0]][currentNode[1]] = VISITED;}
+
         let validNodes = this.#getValidNeighbors(currentNode)
         for(let Node of validNodes){
             let path = await this.depthFirstSearch(Node)

@@ -5,13 +5,14 @@ const END_ICON = 'url(assets/end.jpg)';
 class Board{
     constructor(row,column){
         this.numOfSquaresRow = row
-        this.NumOfSquaresColumn = column
+        this.numOfSquaresColumn = column
         this.algorithm = "A*"
-        this.numericalBoard = Array(this.numOfSquaresRow).fill().map(()=>Array(this.NumOfSquaresColumn).fill(0));
+        this.numericalBoard = Array(this.numOfSquaresRow).fill().map(()=>Array(this.numOfSquaresColumn).fill(0));
         this.mouseClicked = [false]
         this.startInHands = [false]
         this.endInHands = [false]
         this.speed = "Fast"
+        this.notReadyForSearch = [false];
         
     }
     
@@ -26,11 +27,11 @@ class Board{
         let gameBoard = document.getElementById("board")
 
         // css set max number of columns
-        gameBoard.style["grid-template-columns"] = "repeat("+ this.NumOfSquaresColumn +", 1fr)";
+        gameBoard.style["grid-template-columns"] = "repeat("+ this.numOfSquaresColumn +", 1fr)";
 
         // create squares and append them to the board
         for(let i=0; i<this.numOfSquaresRow; i++){
-            for(let j = 0; j < this.NumOfSquaresColumn; j++){
+            for(let j = 0; j < this.numOfSquaresColumn; j++){
             let square = document.createElement("div")
             this.#initializeSquare(square,i,j)
             gameBoard.appendChild(square);
@@ -67,8 +68,8 @@ class Board{
     }
 
     #resetEndNodePosition(){
-        this.numericalBoard[this.numOfSquaresRow-1][this.NumOfSquaresColumn-1] = END
-        coordinatesToSquare(this.numOfSquaresRow-1,this.NumOfSquaresColumn-1).style.backgroundImage = END_ICON;
+        this.numericalBoard[this.numOfSquaresRow-1][this.numOfSquaresColumn-1] = END
+        coordinatesToSquare(this.numOfSquaresRow-1,this.numOfSquaresColumn-1).style.backgroundImage = END_ICON;
     }
 
     // make sure start and end node did not disappear, if so reset their positions
@@ -77,24 +78,28 @@ class Board{
         let endfound = false;
       
         for (let i=0; i<this.numOfSquaresRow; i++){
-          for(let j =0; j < this.NumOfSquaresColumn; j++){
-            if(this.numericalBoard[i][j]===2){
+          for(let j =0; j < this.numOfSquaresColumn; j++){
+            if(this.numericalBoard[i][j]===START){
               startfound=true;
             }
-            if(this.numericalBoard[i][j]===3){
+            if(this.numericalBoard[i][j]===END){
               endfound=true;
             }
           }
         }
         if (!startfound){
+          if (this.numericalBoard[0][0] === END) {this.#resetEndNodePosition()} //handle if END was lying on the reset position of start
             this.#resetStartNodePosition()
         }
         if(!endfound){
+          if (this.numericalBoard[this.numOfSquaresRow-1][this.numOfSquaresColumn-1] === START) {this.#resetStartNodePosition()}
             this.#resetEndNodePosition()
+            
         }
       }
 
     mouseDownHandle(){
+
         this.mouseClicked[0] = true
     }
     mouseUpHandle(){
@@ -104,9 +109,11 @@ class Board{
         this.#check_if_board_valid()
     }
 
-    #addOnClick(square){        
+    #addOnClick(square){    
+
         let Board = this.numericalBoard
         square.onclick = function(){
+
             let r = this.attributes.row.nodeValue
             let c = this.attributes.column.nodeValue
             let thisSquareCoordinates = [r,c]
@@ -126,6 +133,7 @@ class Board{
         let startInHands = this.startInHands
         let endInHands = this.endInHands
         square.onmouseover= function(){
+
             let r = this.attributes.row.nodeValue
             let c = this.attributes.column.nodeValue
             let thisSquareCoordinates = [r,c]
@@ -133,26 +141,19 @@ class Board{
             
         
             if (startInHands[0]){
-              if(Board[r][c]!== END){
-                colorSquare(thisSquareCoordinates,"START")
+              colorSquare(thisSquareCoordinates,"START")
                 Board[r][c]=START;
-              }
               // if user puts start in end block, return end block to default pos
-              else if(Board[r][c]===END){
-                colorSquare(thisSquareCoordinates,"START")
-                Board[r][c]=START;
+              if(Board[r][c]===END){
                 resetEndNodePosition();
               }
             }
     
             if (endInHands[0]){
-              if(Board[r][c]!== START){
-                colorSquare(thisSquareCoordinates,"END")
+              colorSquare(thisSquareCoordinates,"END")
                 Board[r][c]=END;
-              }
-              else if (Board[r][c]=== START){
-                colorSquare(thisSquareCoordinates,"END")
-                Board[r][c]=END;
+
+              if (Board[r][c]=== START){
                 resetStartNodePosition();
                 
               }
@@ -164,11 +165,12 @@ class Board{
     
     
     #addOnMouseOut(square){
+
         let Board = this.numericalBoard
         let mouseClicked = this.mouseClicked
         let startInHands = this.startInHands
         let endInHands = this.endInHands
-        
+
         square.onmouseout= function(){
             let r = this.attributes.row.nodeValue
             let c = this.attributes.column.nodeValue
@@ -214,6 +216,10 @@ class Board{
                 endInHands[0] = true;
                 Board[r][c]=NOTHING;
               }
+              else if(thisSquare === PATH){
+                colorSquare(thisSquareCoordinates, "ANIMATE-WALL")
+                Board[r][c] = WALL;
+              }
               
     
             }
@@ -223,7 +229,7 @@ class Board{
     }
     #addEventListenersToSquares(){
         for(let i=0; i<this.numOfSquaresRow; i++){
-            for(let j = 0; j<this.NumOfSquaresColumn; j++){
+            for(let j = 0; j<this.numOfSquaresColumn; j++){
                 let square = coordinatesToSquare(i.toString(),j.toString())
                 
                 this.#addOnClick(square)
@@ -233,6 +239,16 @@ class Board{
         }
     }
 
+}
+function clearPath(){
+  for(let i =0; i<board.numericalBoard.length; i++){
+    for(let j =0; j<board.numericalBoard[0].length; j++){
+      if(board.numericalBoard[i][j] === PATH){
+      board.numericalBoard[i][j] = NOTHING;
+      colorSquare([i,j], "NOTHING")
+      }
+    }
+  }
 }
 
 function algopick() {  
@@ -245,13 +261,18 @@ function speedpick() {
 } 
   
 async function start(){ 
+  if (  this.notReadyForSearch)return;
+  clearPath()
+  this.notReadyForSearch = true;
   document.getElementById("startbutton").disabled = true;
   switch(board.algorithm){
     case "A*":
-      astar = new aStar(board.numericalBoard, board.speed)
+      astar = new aStar(board.numericalBoard, board.speed, "A*")
       await astar.search()
       break;
-    case "Dijsktra":
+    case "Dijkstra":
+      astar = new aStar(board.numericalBoard, board.speed, "Dijkstra")
+      await astar.search()
       break;
     case "Breadth First Search":
       bfs = new BFS(board.numericalBoard, board.speed)
@@ -263,9 +284,18 @@ async function start(){
       await dfs.search()
       break;
   }
+  this.notReadyForSearch = false;
   document.getElementById("startbutton").disabled = false;
 }
-
+function clearBoard(){
+  for(let i =0; i<board.numericalBoard.length; i++){
+    for(let j =0; j<board.numericalBoard[0].length; j++){
+      if(board.numericalBoard[i][j] === START || board.numericalBoard[i][j] === END) continue;
+      board.numericalBoard[i][j] = NOTHING;
+      colorSquare([i,j], "NOTHING")
+    }
+  }
+}
 
 document.addEventListener("DOMContentLoaded", ()=>{
     board = new Board(25,20)
